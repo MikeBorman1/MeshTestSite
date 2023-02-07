@@ -2,12 +2,13 @@ import Head from "next/head";
 import { CardanoWallet, MeshBadge } from "@meshsdk/react";
 import React from "react";
 import { useWallet } from '@meshsdk/react';
+import TransactionForm from '../components/transactionForm'
 
 export default function Home() {
   const { connected, wallet } = useWallet();
   const [networkId, setNetworkId] = React.useState(null);
   const [assets, setAssets] = React.useState(null);
-
+      
   const getNetworkId = async () => {
     const networkId = await wallet.getNetworkId();
     setNetworkId(networkId);
@@ -50,13 +51,15 @@ export default function Home() {
           <CardanoWallet  />
         </div>
         {connected &&
-          <a><p>Connected wallet network id: {networkId}</p>
+          <a><p>Connected wallet network: {networkId === 0 ? "Preview" : "Main net"}</p>
           <pre>
               <code className="language-js">
                 {JSON.stringify(assets, null, 2)}
               </code>
             </pre>
           </a>}
+          <TransactionForm wallet = {wallet}/>
+      
       </main>
 
       <footer className="footer">
