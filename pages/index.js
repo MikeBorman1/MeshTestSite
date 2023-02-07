@@ -1,7 +1,30 @@
 import Head from "next/head";
 import { CardanoWallet, MeshBadge } from "@meshsdk/react";
+import React from "react";
+import { useWallet } from '@meshsdk/react';
 
 export default function Home() {
+  const { connected, wallet } = useWallet();
+  const [networkId, setNetworkId] = React.useState(null);
+  const [assets, setAssets] = React.useState(null);
+
+  const getNetworkId = async () => {
+    const networkId = await wallet.getNetworkId();
+    setNetworkId(networkId);
+  };
+
+  const getAssets = async () => {
+    const assets = await wallet.getBalance();
+    setAssets(assets);
+  };
+
+  React.useEffect(() => {
+    if (connected) {
+      getNetworkId();
+      getAssets();
+    }
+  }, [connected]);
+
   return (
     <div className="container">
       <Head>
@@ -24,10 +47,16 @@ export default function Home() {
         </h1>
 
         <div className="demo">
-          <CardanoWallet />
+          <CardanoWallet  />
         </div>
-
-        
+        {connected &&
+          <a><p>Connected wallet network id: {networkId}</p>
+          <pre>
+              <code className="language-js">
+                {JSON.stringify(assets, null, 2)}
+              </code>
+            </pre>
+          </a>}
       </main>
 
       <footer className="footer">
@@ -36,3 +65,4 @@ export default function Home() {
     </div>
   );
 }
+
