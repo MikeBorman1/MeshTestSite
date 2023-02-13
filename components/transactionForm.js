@@ -16,9 +16,7 @@ const handleAmmount = (event) => {
   };
 
 const sendAda = async (toAddress,ammount,wallet) => {  
-    //ammount = ammount*1000000
-    const assets = await wallet.getBalance();
-    console.log(assets)
+
     const tx = new Transaction({ initiator: wallet })
     .sendLovelace(
         toAddress,
